@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { IStore } from './models/common';
 import { Image } from 'antd';
 
-import donateImg from './assets/img/donate.jpeg';
+import donateImg from './assets/img/donate.png';
 
 
 function App() {
