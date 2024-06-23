@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/static/css/main.e659c578.css",
-    "main.js": "/static/js/main.b1f80012.js",
-    "static/js/453.1f2398ba.chunk.js": "/static/js/453.1f2398ba.chunk.js",
-    "static/media/薬師寺寛邦,キッサコ - 呼吸.mp3": "/static/media/薬師寺寛邦,キッサコ - 呼吸.1e7ad4a18e7509fbced4.mp3",
-    "static/media/donate.jpeg": "/static/media/donate.b557736fd085a3a32e3e.jpeg",
-    "index.html": "/index.html",
-    "main.e659c578.css.map": "/static/css/main.e659c578.css.map",
-    "main.b1f80012.js.map": "/static/js/main.b1f80012.js.map",
-    "453.1f2398ba.chunk.js.map": "/static/js/453.1f2398ba.chunk.js.map"
+    "main.css": "/audio-player/static/css/main.e659c578.css",
+    "main.js": "/audio-player/static/js/main.8b9eea6e.js",
+    "static/js/453.1f2398ba.chunk.js": "/audio-player/static/js/453.1f2398ba.chunk.js",
+    "static/media/薬師寺寛邦,キッサコ - 呼吸.mp3": "/audio-player/static/media/薬師寺寛邦,キッサコ - 呼吸.1e7ad4a18e7509fbced4.mp3",
+    "static/media/donate.jpeg": "/audio-player/static/media/donate.b557736fd085a3a32e3e.jpeg",
+    "index.html": "/audio-player/index.html",
+    "main.e659c578.css.map": "/audio-player/static/css/main.e659c578.css.map",
+    "main.8b9eea6e.js.map": "/audio-player/static/js/main.8b9eea6e.js.map",
+    "453.1f2398ba.chunk.js.map": "/audio-player/static/js/453.1f2398ba.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e659c578.css",
-    "static/js/main.b1f80012.js"
+    "static/js/main.8b9eea6e.js"
   ]
 }
