@@ -1,5 +1,6 @@
 {
   "name": "audio-player",
+  "homepage": "https://winters-song.github.io/audio-player",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
