@@ -1,12 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {ICommonStore} from "../../models/common";
-import { defaultPlayList } from '../../constants';
 
 // initial state
 const initialState:ICommonStore = {
   playListVisible: false,
-  playList: [], // defaultPlayList,
-  currentItem: undefined //defaultPlayList[0],
+  playList: [],
+  randomPlayList: [],
+  currentItem: undefined,
+  playMode: 0
 };
 // ==============================|| SLICE - MENU ||============================== //
 
@@ -28,8 +29,16 @@ const common = createSlice({
       console.log(action.payload)
     },
 
+    updateRandomPlayList(state, action) {
+      state.randomPlayList = action.payload
+    },
+
     updateCurrentItem(state, action) {
       state.currentItem = action.payload
+    },
+
+    updatePlayMode(state, action) {
+      state.playMode = action.payload
     },
   }
 });
@@ -40,5 +49,7 @@ export const {
   updatePlayListVisible,
   addMusic,
   updatePlayList,
+  updateRandomPlayList,
   updateCurrentItem,
+  updatePlayMode
 } = common.actions;

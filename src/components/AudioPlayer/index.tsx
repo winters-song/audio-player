@@ -1,35 +1,44 @@
 import React, { FC, useEffect, useRef, useState } from "react"
 import { PlayerWrapper } from "./styles";
 import { Slider } from 'antd';
-import { IconFullscreen, IconNext, IconPause, IconPlay, IconPlayList, IconPrev, IconVolume, IconVolumeMute } from "../common/icons";
+import { IconFullscreen, IconLoop, IconNext, IconPause, IconPlay, IconPlayList, IconPrev, IconRandom, IconSingleCycle, IconVolume, IconVolumeMute } from "../common/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { IStore } from "../../models/common";
-import { updateCurrentItem, updatePlayList, updatePlayListVisible } from "../../store/reducers/common";
+import { updateCurrentItem, updatePlayList, updatePlayListVisible, updatePlayMode, updateRandomPlayList } from "../../store/reducers/common";
 import SceneMgr from "../SceneMgr";
-import { decodeMusic, formatTime, presetLocalMusic } from "../../utils/utils";
+import { formatTime, presetLocalMusic } from "../../utils/utils";
+import { shuffle } from 'lodash';
 
+/**
+ * I import the first music by hard coding here, 
+ * bacause the mp3 decoder only works through Blob
+ */
 import breath from '../../assets/audio/薬師寺寛邦,キッサコ - 呼吸.mp3';
+import { PLAY_MODE, TOTAL_PLAY_MODE } from "../common/constants";
 
 
 const Audio: FC = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
-  const [volume, setVolume] = useState( Number(localStorage.getItem('volume')) || 0.5);
+  const [volume, setVolume] = useState(Number(localStorage.getItem('volume')) || 0.5);
   const [duration, setDuration] = useState(0);
-  
+
   const dispatch = useDispatch()
   const playList = useSelector((state: IStore) => state.common.playList)
+  const randomPlayList = useSelector((state: IStore) => state.common.randomPlayList)
   const currentItem = useSelector((state: IStore) => state.common.currentItem)
   const playListVisible = useSelector((state: IStore) => state.common.playListVisible)
-  
+  const playMode = useSelector((state: IStore) => state.common.playMode)
+
   const lastVolume = useRef(volume)
 
   const pageInited = useRef(false)
   const sceneMgr = useRef<SceneMgr>()
 
+  // toggle between play and pause
   const handlePlay = () => {
-    if(!currentItem){
+    if (!currentItem) {
       return;
     }
     if (audioRef.current) {
@@ -66,7 +75,7 @@ const Audio: FC = () => {
       audioRef.current.volume = value;
       setVolume(value);
 
-      if(value){
+      if (value) {
         lastVolume.current = value
         localStorage.setItem('volume', value.toString())
       }
@@ -89,26 +98,52 @@ const Audio: FC = () => {
   }
 
   const onPrev = () => {
-    const index = playList.findIndex((item) => item.url === currentItem?.url);
+    const list = playMode === PLAY_MODE.RANDOM ? randomPlayList : playList
+
+    const index = list.findIndex((item) => item.url === currentItem?.url);
     if (index > 0) {
-      dispatch(updateCurrentItem(playList[index - 1]))
+      dispatch(updateCurrentItem(list[index - 1]))
+    }else{
+      dispatch(updateCurrentItem(list[list.length - 1]))
     }
   }
 
   const onNext = () => {
-    const index = playList.findIndex((item) => item.url === currentItem?.url);
-    if (index < playList.length - 1) {
-      dispatch(updateCurrentItem(playList[index + 1]))
+    const list = playMode === PLAY_MODE.RANDOM ? randomPlayList : playList
+
+    const index = list.findIndex((item) => item.url === currentItem?.url);
+    if (index < list.length - 1) {
+      dispatch(updateCurrentItem(list[index + 1]))
+    }else{
+      dispatch(updateCurrentItem(list[0]))
     }
   }
 
+  const onEnded = () => {
+    if (audioRef.current) {
+      if (playMode === PLAY_MODE.SINGLE) {
+        audioRef.current.currentTime = 0
+        onPlay();
+      }else{
+        onNext();
+      }
+    }
+  }
+
+  const switchPlayMode = (playMode: number) => {
+    const nextMode = (playMode + 1) % TOTAL_PLAY_MODE
+    dispatch(updatePlayMode(nextMode))
+
+  }
+
+  // switch music 
+  // (do not trigger before user interact - browser autoplay policy)
   useEffect(() => {
-    // switch play
-    if(pageInited.current){
-      if(currentItem){
+    if (pageInited.current) {
+      if (currentItem) {
         onPlay();
         setIsPlaying(true)
-      }else{
+      } else {
         onPause();
         setIsPlaying(false)
       }
@@ -116,7 +151,7 @@ const Audio: FC = () => {
 
   }, [currentItem])
 
-  
+
 
   useEffect(() => {
     // load default music
@@ -132,12 +167,20 @@ const Audio: FC = () => {
     }, 500)
   }, [])
 
+
+  useEffect(() => {
+    if(playMode === PLAY_MODE.RANDOM){
+      dispatch(updateRandomPlayList(shuffle([...playList])))
+    }
+  }, [playList, playMode])
+
   return (
     <PlayerWrapper>
       <audio
         ref={audioRef}
         src={currentItem?.url}
         onTimeUpdate={handleTimeUpdate}
+        onEnded={onEnded}
       />
       <div className="audio-player">
         <div className="progress-bar">
@@ -159,12 +202,12 @@ const Audio: FC = () => {
             <div className="time">{formatTime(currentTime)} / {formatTime(duration)}</div>
           </div>
         </div>
-        
+
         <div className="center-bar">
           <div className="pager-btn prev-btn" onClick={onPrev}>
             <IconPrev />
           </div>
-          <div className="play-btn"  onClick={handlePlay}>
+          <div className="play-btn" onClick={handlePlay}>
             {isPlaying ? <IconPause /> : <IconPlay />}
           </div>
 
@@ -176,7 +219,7 @@ const Audio: FC = () => {
         <div className="right-bar">
           <div className="volume-wrapper">
             <div className="btn volume-btn" onClick={() => handleVolumeChange(volume ? 0 : lastVolume.current)}>
-              {volume === 0 ? <IconVolumeMute /> :<IconVolume />}
+              {volume === 0 ? <IconVolumeMute /> : <IconVolume />}
             </div>
             <Slider
               className="volume-slider"
@@ -188,12 +231,18 @@ const Audio: FC = () => {
             />
           </div>
 
+          <div className="btn mode-btn" onClick={() => switchPlayMode(playMode)}>
+            {playMode === PLAY_MODE.LOOP && <IconLoop />}
+            {playMode === PLAY_MODE.SINGLE && <IconSingleCycle />}
+            {playMode === PLAY_MODE.RANDOM && <IconRandom />}
+          </div>
+
           <div className="btn list-btn" onClick={() => dispatch(updatePlayListVisible(!playListVisible))}>
-            <IconPlayList /> 
+            <IconPlayList />
           </div>
 
           <div className="btn fullscreen-btn" onClick={toggleFullScreen}>
-            <IconFullscreen /> 
+            <IconFullscreen />
           </div>
         </div>
       </div>

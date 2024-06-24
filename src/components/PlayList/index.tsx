@@ -14,19 +14,24 @@ const PlayList = () => {
 
   const fileRef = React.createRef<HTMLInputElement>();
 
+  const handleFileUpload = async (files: FileList) => {
+    const promises = Array.from(files).map(async (file) => {
+      const blobUrl = URL.createObjectURL(file);
+      const filename = file.name.split('.')[0];
+  
+      const params = await decodeMusic(file)
+  
+      return { name: filename, url: blobUrl, ...params };
+    });
+  
+    const newList = await Promise.all(promises);
+    dispatch(updatePlayList([...list, ...newList]));
+  };
+
+  
   const onUpload: ChangeEventHandler<HTMLInputElement> = (e) => {
     if (e.target.files) {
-      const promises = Array.from(e.target.files).map(async (file) => {
-        const blobUrl = URL.createObjectURL(file);
-        const filename = file.name.split('.')[0];
-
-        const params = await decodeMusic(file)
-
-        return { name: filename, url: blobUrl, ...params };
-      });
-
-      Promise.all(promises)
-        .then((newList) => dispatch(updatePlayList([...list, ...newList])))
+      handleFileUpload(e.target.files);
     }
   };
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
@@ -36,25 +41,7 @@ const PlayList = () => {
     const files = e.dataTransfer.files;
     
     if (files.length > 0) {
-      const promises = Array.from(files).map(async (file) => {
-        const blobUrl = URL.createObjectURL(file);
-        const filename = file.name.split('.')[0];
-
-        const params = await decodeMusic(file)
-
-        return { name: filename, url: blobUrl, ...params };
-      });
-
-      Promise.all(promises)
-        .then((newList) => dispatch(updatePlayList([...list, ...newList])))
-      // const newList = [...list];
-      // Array.from(files).forEach(file => {
-      //   const blobUrl = URL.createObjectURL(file);
-      //   const filename = file.name.split('.')[0];
-
-      //   newList.push({ name: filename, url: blobUrl });
-      // });
-      // dispatch(updatePlayList(newList));
+      handleFileUpload(files);
     }
   };
 
