@@ -7,7 +7,8 @@ const initialState:ICommonStore = {
   playList: [],
   randomPlayList: [],
   currentItem: undefined,
-  playMode: 0
+  playMode: 0,
+  effectMode: 0
 };
 // ==============================|| SLICE - MENU ||============================== //
 
@@ -40,6 +41,10 @@ const common = createSlice({
     updatePlayMode(state, action) {
       state.playMode = action.payload
     },
+
+    updateEffectMode(state, action) {
+      state.effectMode = action.payload
+    }
   }
 });
 
@@ -51,5 +56,6 @@ export const {
   updatePlayList,
   updateRandomPlayList,
   updateCurrentItem,
-  updatePlayMode
+  updatePlayMode,
+  updateEffectMode
 } = common.actions;

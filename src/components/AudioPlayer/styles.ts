@@ -28,7 +28,9 @@ export const PlayerWrapper = styled.div`
       margin: 0;
 
       .ant-slider-rail {
-        background-color: rgb(255, 255, 255, 0.1);
+        background-color: rgba(255, 255, 255, 0.3);
+        /* background-color: white;
+        box-shadow: 0 0 12px 0px rgb(255 255 255), 0 0 12px 3px rgb(0 210 255), 0 0 20px 0px rgb(0 179 255), 0 0 40px 10px rgb(0 155 255), 0 0 60px 20px rgb(0 155 255); */
       }
 
       .ant-slider-track{
@@ -43,6 +45,7 @@ export const PlayerWrapper = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: space-around;
+    z-index: 2;
     
     .play-btn{
       width: 44px;
@@ -102,6 +105,7 @@ export const PlayerWrapper = styled.div`
 
     .name{
       width: 200px;
+      color: white;
     }
     
     .time{

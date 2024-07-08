@@ -7,6 +7,7 @@ import { IStore } from './models/common';
 import { Image } from 'antd';
 
 import donateImg from './assets/img/donate.png';
+import EffectPicker from './components/EffectPicker';
 
 
 function App() {
@@ -16,6 +17,8 @@ function App() {
   return (
     <div className="App">
       <canvas id="canvas"/>
+
+      <EffectPicker />
 
       <AudioPlayer />
       { playListVisible && <PlayList />}

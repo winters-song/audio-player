@@ -1938,6 +1938,11 @@
     redux-thunk "^3.1.0"
     reselect "^5.1.0"
 
+"@remix-run/router@1.17.0":
+  version "1.17.0"
+  resolved "https://registry.npmmirror.com/@remix-run/router/-/router-1.17.0.tgz#fbb0add487478ef42247d5942e7a5d8a2e20095f"
+  integrity sha512-2D6XaHEVvkCn682XBnipbJjgZUU7xjLtA4dGJRBVUKpEaDYOZMENZoZjAOSb7qirxt5RupjzZxz4fK2FO+EFPw==
+
 "@rollup/plugin-babel@^5.2.0":
   version "5.3.1"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-babel/-/plugin-babel-5.3.1.tgz#04bc0608f4aa4b2e4b1aebf284344d0f68fda283"
@@ -2290,6 +2295,13 @@
     "@types/express-serve-static-core" "^4.17.33"
     "@types/qs" "*"
     "@types/serve-static" "*"
+
+"@types/gl-matrix@^3.2.0":
+  version "3.2.0"
+  resolved "https://registry.npmmirror.com/@types/gl-matrix/-/gl-matrix-3.2.0.tgz#a62e0f26be4ab6fa55284a29eec631c8641438a1"
+  integrity sha512-CY4JAtSOGQX7rVgqVuOk7ZfaLv8VeadDMPj3smMOy8Hp/YiHONa3Mr0mEUgbo0eEwV7+Owpf6BwspcA7hv4NXg==
+  dependencies:
+    gl-matrix "*"
 
 "@types/graceful-fs@^4.1.2":
   version "4.1.9"
@@ -5317,6 +5329,11 @@ get-symbol-description@^1.0.2:
     call-bind "^1.0.5"
     es-errors "^1.3.0"
     get-intrinsic "^1.2.4"
+
+gl-matrix@*, gl-matrix@^3.4.3:
+  version "3.4.3"
+  resolved "https://registry.npmmirror.com/gl-matrix/-/gl-matrix-3.4.3.tgz#fc1191e8320009fd4d20e9339595c6041ddc22c9"
+  integrity sha512-wcCp8vu8FT22BnvKVPjXa/ICBWRq/zjFfdofZy1WSpQZpphblv12/bOQLBC1rMM7SGOFS9ltVmKOHil5+Ml7gA==
 
 glob-parent@^5.1.2, glob-parent@~5.1.2:
   version "5.1.2"
@@ -8732,6 +8749,21 @@ react-refresh@^0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.11.0.tgz#77198b944733f0f1f1a90e791de4541f9f074046"
   integrity sha512-F27qZr8uUqwhWZboondsPx8tnC3Ct3SxZA3V5WyEvujRyyNv0VYPhoBg1gZ8/MV5tubQp76Trw8lTv9hzRBa+A==
+
+react-router-dom@^6.24.0:
+  version "6.24.0"
+  resolved "https://registry.npmmirror.com/react-router-dom/-/react-router-dom-6.24.0.tgz#ec49dc38c49bb9bd25b310a8ae849268d3085e1d"
+  integrity sha512-960sKuau6/yEwS8e+NVEidYQb1hNjAYM327gjEyXlc6r3Skf2vtwuJ2l7lssdegD2YjoKG5l8MsVyeTDlVeY8g==
+  dependencies:
+    "@remix-run/router" "1.17.0"
+    react-router "6.24.0"
+
+react-router@6.24.0:
+  version "6.24.0"
+  resolved "https://registry.npmmirror.com/react-router/-/react-router-6.24.0.tgz#aa46648f26b6525e07f908ad3e1ad2e68d131155"
+  integrity sha512-sQrgJ5bXk7vbcC4BxQxeNa5UmboFm35we1AFK0VvQaz9g0LzxEIuLOhHIoZ8rnu9BO21ishGeL9no1WB76W/eg==
+  dependencies:
+    "@remix-run/router" "1.17.0"
 
 react-scripts@5.0.1:
   version "5.0.1"

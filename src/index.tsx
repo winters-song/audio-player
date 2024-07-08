@@ -5,6 +5,8 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider as ReduxProvider } from 'react-redux';
 import { store } from './store';
+import { BrowserRouter } from 'react-router-dom';
+import Routes from './routes';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -12,7 +14,10 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <ReduxProvider store={store}>
-    <App />
+    <BrowserRouter basename='audio-player'>
+      <Routes />
+    </BrowserRouter>
+    {/* <App /> */}
   </ReduxProvider>
 );
 

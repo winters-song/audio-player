@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Canvas 2D Triangle with Vertex Coloring</title>
+</head>
+<body>
+    <canvas id="myCanvas" width="400" height="400" style="border:1px solid #000000;"></canvas>
+    <script>
+        // 获取 Canvas 元素和绘图上下文
+        const canvas = document.getElementById('myCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // 定义三角形的顶点
+        const vertices = [
+            { x: 100, y: 100, color: { r: 255, g: 0, b: 0 } }, // 左下角，红色
+            { x: 300, y: 100, color: { r: 0, g: 255, b: 0 } }, // 右下角，绿色
+            { x: 200, y: 300, color: { r: 0, g: 0, b: 255 } }  // 顶部，蓝色
+        ];
+
+        // 定义线性插值函数
+        function lerp(start, end, t) {
+            return {
+                r: start.r + (end.r - start.r) * t,
+                g: start.g + (end.g - start.g) * t,
+                b: start.b + (end.b - start.b) * t
+            };
+        }
+
+        // 绘制三角形
+        function drawTriangle() {
+            ctx.beginPath();
+            ctx.moveTo(vertices[0].x, vertices[0].y);
+
+            // 绘制每条边，并在中间进行颜色插值
+            for (let i = 1; i < vertices.length; i++) {
+                const startColor = vertices[i - 1].color;
+                const endColor = vertices[i].color;
+                const midColor = lerp(startColor, endColor, 0.5);
+
+                ctx.strokeStyle = `rgb(${midColor.r}, ${midColor.g}, ${midColor.b})`;
+                ctx.lineTo(vertices[i].x, vertices[i].y);
+            }
+
+            // 关闭路径并填充
+            ctx.closePath();
+            ctx.stroke();
+        }
+
+        // 绘制三角形
+        drawTriangle();
+    </script>
+</body>
+</html>

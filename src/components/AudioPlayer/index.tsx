@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useRef, useState } from "react"
 import { PlayerWrapper } from "./styles";
-import { Slider } from 'antd';
+import { Slider, Typography } from 'antd';
 import { IconFullscreen, IconLoop, IconNext, IconPause, IconPlay, IconPlayList, IconPrev, IconRandom, IconSingleCycle, IconVolume, IconVolumeMute } from "../common/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { IStore } from "../../models/common";
@@ -16,6 +16,7 @@ import { shuffle } from 'lodash';
 import breath from '../../assets/audio/薬師寺寛邦,キッサコ - 呼吸.mp3';
 import { PLAY_MODE, TOTAL_PLAY_MODE } from "../common/constants";
 
+const {Text} = Typography
 
 const Audio: FC = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -30,6 +31,7 @@ const Audio: FC = () => {
   const currentItem = useSelector((state: IStore) => state.common.currentItem)
   const playListVisible = useSelector((state: IStore) => state.common.playListVisible)
   const playMode = useSelector((state: IStore) => state.common.playMode)
+  const effectMode = useSelector((state: IStore) => state.common.effectMode)
 
   const lastVolume = useRef(volume)
 
@@ -61,6 +63,8 @@ const Audio: FC = () => {
 
   const onPause = async () => {
     audioRef.current?.pause();
+    sceneMgr.current?.stopVisualize();
+
     sceneMgr.current?.resetCanvas();
   }
 
@@ -164,7 +168,7 @@ const Audio: FC = () => {
 
     setTimeout(() => {
       pageInited.current = true
-    }, 500)
+    }, 1000)
   }, [])
 
 
@@ -173,6 +177,12 @@ const Audio: FC = () => {
       dispatch(updateRandomPlayList(shuffle([...playList])))
     }
   }, [playList, playMode])
+
+  useEffect(() => {
+    if(effectMode !== undefined){
+      sceneMgr.current?.toggleEffect(effectMode)
+    }
+  }, [effectMode])
 
   return (
     <PlayerWrapper>
@@ -198,7 +208,7 @@ const Audio: FC = () => {
             backgroundImage: `url(${currentItem?.cover})`
           }}></div>
           <div className="col">
-            <div className="name">{currentItem?.title ? `${currentItem?.title} - ${currentItem?.artist}` : currentItem?.name}</div>
+            <Text className="name" ellipsis>{currentItem?.title ? `${currentItem?.title} - ${currentItem?.artist}` : currentItem?.name}</Text>
             <div className="time">{formatTime(currentTime)} / {formatTime(duration)}</div>
           </div>
         </div>
