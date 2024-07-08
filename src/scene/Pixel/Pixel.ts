@@ -13,9 +13,9 @@ export default class Pixel implements IBaseScene{
 
   frameTimer = 0
 
-  dataLength = 100
+  dataLength = 60
 
-  dataOffset = 0
+  dataOffset = 5
 
   gap = 6
 
@@ -114,7 +114,7 @@ export default class Pixel implements IBaseScene{
     if(!this.el || !this.postctx || !this.ctx){
       return;
     }
-    this.stats.begin();
+    // this.stats.begin();
 
     if (this.analyser) {
       // 读取数据
@@ -122,7 +122,7 @@ export default class Pixel implements IBaseScene{
       this.draw(dataArray)
     }
 
-    this.stats.end();
+    // this.stats.end();
 
     this.frameTimer = requestAnimationFrame(() => this.drawEachFrame(dataArray))
   }

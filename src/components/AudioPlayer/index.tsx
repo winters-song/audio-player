@@ -65,7 +65,7 @@ const Audio: FC = () => {
     audioRef.current?.pause();
     sceneMgr.current?.stopVisualize();
 
-    sceneMgr.current?.resetCanvas();
+    // sceneMgr.current?.resetCanvas();
   }
 
   const handleProgressChange = (value: number) => {
