@@ -39,10 +39,10 @@ export default class Bar2D implements IBaseScene{
 
   resetCanvas() {
     if (this.el) {
-      // const emptyDataArray = (new Uint8Array(this.dataLength)).map(() => 0);
+      const emptyDataArray = (new Uint8Array(this.dataLength)).map(() => 0);
       this.clearFloats();
       this.clearCanvas();
-      // this.drawFloats(emptyDataArray);
+      this.drawFloats(emptyDataArray);
     }
   }
 
@@ -77,15 +77,15 @@ export default class Bar2D implements IBaseScene{
     if(!this.el){
       return
     }
-    // const canvasWidth = this.el.width;
-    // const canvasHeight = this.el.height;
-    // const canvasCtx = this.el.getContext("2d");
-    // if(!canvasCtx){
-    //   return
-    // }
+    const canvasWidth = this.el.width;
+    const canvasHeight = this.el.height;
+    const canvasCtx = this.el.getContext("2d");
+    if(!canvasCtx){
+      return
+    }
     // 绘制图形
-    // canvasCtx.fillStyle = '#222222';
-    // canvasCtx.fillRect(0, 0, canvasWidth, canvasHeight);
+    canvasCtx.fillStyle = '#222222';
+    canvasCtx.fillRect(0, 0, canvasWidth, canvasHeight);
   }
 
   drawFloats (dataArray: Uint8Array) {
