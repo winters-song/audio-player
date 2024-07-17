@@ -4,7 +4,7 @@
  - Audio API
  - jsmediatags-web : decodes mp3 to get music info (title, artist, cover image)
 
- - react-color: https://casesandberg.github.io/react-color/
+ - [react-color](https://casesandberg.github.io/react-color/)
 
  More and more visual effects are coming soon!
 
