@@ -13,7 +13,6 @@ import { shuffle } from 'lodash';
  * I import the first music by hard coding here, 
  * bacause the mp3 decoder only works through Blob
  */
-import breath from '../../assets/audio/薬師寺寛邦,キッサコ - 呼吸.mp3';
 import { defaultPlayList, PLAY_MODE, TOTAL_PLAY_MODE } from "../common/constants";
 
 const {Text} = Typography
