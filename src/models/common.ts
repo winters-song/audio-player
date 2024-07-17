@@ -1,3 +1,5 @@
+import { CANVAS_TYPE } from "../components/common/constants";
+
 export interface ICommonStore {
   playListVisible: boolean;
   playList: PlayListItem[];
@@ -6,7 +8,7 @@ export interface ICommonStore {
   // 0 - loop, 1 - single cycle, 2 - random
   playMode: number; 
 
-  effectMode: number;
+  effectMode: IEffectMode;
 }
 
 export interface IStore {
@@ -31,6 +33,8 @@ export interface IBaseScene {
   
   stopVisualize: () => void
 
+  destroy: () => void
+
   resetCanvas: () => void
 
   drawEachFrame: (dataArray: Uint8Array) => void
@@ -47,4 +51,11 @@ export interface ISceneProps{
   audioCtx: AudioContext | null
 
   analyser: AnalyserNode | null
+}
+
+
+export interface IEffectMode{
+  id: number;
+  name: string;
+  type: CANVAS_TYPE;
 }

@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {ICommonStore} from "../../models/common";
+import { effectList } from '../../components/common/constants';
 
 // initial state
 const initialState:ICommonStore = {
@@ -8,7 +9,7 @@ const initialState:ICommonStore = {
   randomPlayList: [],
   currentItem: undefined,
   playMode: 0,
-  effectMode: 0
+  effectMode: effectList[0]
 };
 // ==============================|| SLICE - MENU ||============================== //
 

@@ -1,17 +1,25 @@
-import { ISceneProps } from "../../models/common"
+import { IEffectMode, ISceneProps } from "../../models/common"
 import Bar2D from "../../scene/Bar2D/Bar2D"
 import Pixel from "../../scene/Pixel/Pixel"
+import Line from "../../scene/Line/Line"
+import { CANVAS_TYPE } from "../common/constants"
 // import TestScene from "../../scene/Test/TestScene"
 
 
 const SceneList = [
   Bar2D,
-  Pixel
+  Pixel,
+  Line
 ]
+
+const canvas2dSelector = '#canvas-2d'
+const canvasWebglSelector = '#canvas-webgl'
 
 export default class SceneMgr {
 
-  el: HTMLCanvasElement | null = null
+  canvas2dEl: HTMLCanvasElement | null = null
+
+  canvasWebglEl: HTMLCanvasElement | null = null
 
   audioCtx: AudioContext | null = null
 
@@ -26,21 +34,20 @@ export default class SceneMgr {
   stream: MediaStream | null = null
 
   //  ['Bar', 'Pixel', 'Ring']
-  currentEffectMode = 0
+  currentEffectMode?: IEffectMode
 
-  constructor(selector: string) {
-    this.el = document.querySelector(selector);
-    if (!this.el) {
+  constructor() {
+    this.canvas2dEl = document.querySelector(canvas2dSelector);
+    this.canvasWebglEl = document.querySelector(canvasWebglSelector);
+    if (!this.canvas2dEl || !this.canvasWebglEl) {
       throw new Error('找不到 canvas');
     }
-    this.el.width = window.innerWidth;    
-    this.el.height = window.innerHeight;
+    this.canvasWebglEl.width = this.canvas2dEl.width = window.innerWidth;    
+    this.canvasWebglEl.height = this.canvas2dEl.height = window.innerHeight;
 
-
-    // this.stats = new Stats();
-    // this.stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
-    // document.body.appendChild( this.stats.dom );
-
+    this.stats = new Stats();
+    this.stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
+    document.body.appendChild( this.stats.dom );
   }
 
   visualize(stream: MediaStream) {
@@ -60,13 +67,13 @@ export default class SceneMgr {
       this.source.connect(this.analyser);
 
       // 准备数据数组
-      this.analyser.fftSize = 256;
+      // this.analyser.fftSize = 256;
       const bufferLength = this.analyser.frequencyBinCount;
       console.log("bufferLength", bufferLength);
       const dataArray = new Uint8Array(bufferLength);
 
 
-      if(!this.scene){
+      if(!this.scene && this.currentEffectMode){
         this.toggleEffect(this.currentEffectMode)
       }
 
@@ -84,29 +91,27 @@ export default class SceneMgr {
     this.scene.resetCanvas();
   }
 
-  toggleEffect(effectMode: number) {
+  toggleEffect(effectMode: IEffectMode, cb?: () => void) {
     this.currentEffectMode = effectMode
 
     if(!this.analyser || !this.audioCtx){
       return 
     }
     if(this.scene){
-      this.scene.stopVisualize();
+      this.scene.destroy();
     }
 
     let params = {
-      el: this.el,
+      el: effectMode.type === CANVAS_TYPE.CANVAS_2D ? this.canvas2dEl : this.canvasWebglEl,
       analyser: this.analyser,
       audioCtx: this.audioCtx,
       stats: this.stats
     } as ISceneProps
 
 
-    this.scene = new SceneList[this.currentEffectMode](params)
+    this.scene = new SceneList[this.currentEffectMode.id - 1](params)
 
-    if(this.stream){
-      this.visualize(this.stream)
-    }
+    cb && cb();
   }
 
 }

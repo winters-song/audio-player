@@ -3,12 +3,9 @@ import { ListWrapper } from "./style";
 import { useDispatch, useSelector } from "react-redux";
 import { IStore } from "../../models/common";
 import { updateEffectMode } from "../../store/reducers/common";
+import { effectList } from "../common/constants";
 
 
-const list = [
-  'Bar Chart',
-  'Pixel Art LED'
-]
 
 const EffectPicker = () => {
   const dispatch = useDispatch();
@@ -16,13 +13,13 @@ const EffectPicker = () => {
 
   return (
     <ListWrapper>
-      {list.map((item, index) => (
+      {effectList.map((item, index) => (
         <div
           key={index}
-          className={`dot ${index === effectMode ? 'active' : ''}`}
-          onClick={() => dispatch(updateEffectMode(index))}
+          className={`dot ${item === effectMode ? 'active' : ''}`}
+          onClick={() => dispatch(updateEffectMode(item))}
         >
-          <span>{item}</span>
+          <span>{item.name}</span>
         </div>
       ))}
     </ListWrapper>

@@ -4,7 +4,9 @@ import React, { useEffect, useRef, useState } from "react"
 // import Shader from '../../scene/Pixel/Pixel';
 import Shader from "./Shader"
 
-
+/**
+ * Text Animation with Shader
+ */
 const Page = (props: any) => {
   const elRef = useRef<HTMLCanvasElement>(null);
   const [isPlaying, setIsPlaying] = useState(true);

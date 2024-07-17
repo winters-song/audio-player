@@ -1,13 +1,14 @@
-import { IBaseScene, ISceneProps } from "../../models/common"
+import { ISceneProps } from "../../models/common"
+import BaseScene from "../Base/BaseScene"
 
-
-export default class Pixel implements IBaseScene{
-  el: HTMLCanvasElement | null = null
-  audioCtx: AudioContext | null = null
-  analyser: AnalyserNode | null = null
-
-  ctx: CanvasRenderingContext2D|null
-  postctx: CanvasRenderingContext2D|null
+/**
+ * use virtual canvas to draw rectangles
+ * use output canvas to add blur (glow) effects
+ */
+export default class Pixel extends BaseScene {
+  
+  ctx: CanvasRenderingContext2D | null
+  postctx: CanvasRenderingContext2D | null
 
   frame = 0
 
@@ -19,20 +20,41 @@ export default class Pixel implements IBaseScene{
 
   gap = 6
 
-  stats: any
-
   constructor(params: ISceneProps) {
-    Object.assign(this, params)
+    super(params)
 
     this.ctx = document.createElement('canvas').getContext('2d')
-    if(!this.el){
+    if (!this.el) {
       this.postctx = null;
       return;
     }
-    this.postctx = this.el.getContext('2d') 
+    this.postctx = this.el.getContext('2d')
   }
 
-  init() {}
+  init() { 
+    if(!this.el) return
+    if(this.inited){
+      return;
+    }
+    this.inited = true
+    
+    const resizeHandler = () => {
+      if (!this.el) {
+        return;
+      }
+      var width = window.innerWidth;
+      var height = window.innerHeight;
+      this.el.width = width;
+      this.el.height = height;
+      console.log('do resize')
+    };
+    window.addEventListener('resize', resizeHandler);
+
+    this.removeResizeEvent = () => {
+      window.removeEventListener('resize', resizeHandler);
+    }
+
+  }
 
   stopVisualize() {
     if (this.frameTimer) {
@@ -49,24 +71,22 @@ export default class Pixel implements IBaseScene{
     }
   }
 
-  clearCanvas () {
-    if(!this.postctx){
+  clearCanvas() {
+    if (!this.postctx) {
       return
     }
     this.postctx.clearRect(0, 0, this.postctx.canvas.width, this.postctx.canvas.height)
   }
 
-  private draw (dataArray: Uint8Array) {
-    if(!this.el || !this.postctx || !this.ctx){
+  draw(dataArray: Uint8Array) {
+    if (!this.el || !this.postctx || !this.ctx) {
       return;
     }
     this.frame++
 
     // Resizing
-    // if (this.postctx.canvas.width !== this.postctx.canvas.offsetWidth || this.postctx.canvas.height !== this.postctx.canvas.offsetHeight) {
-      this.ctx.canvas.width = this.postctx.canvas.width = this.el.width
-      this.ctx.canvas.height = this.postctx.canvas.height = this.el.height
-    // }
+    this.ctx.canvas.width = this.postctx.canvas.width = this.el.width
+    this.ctx.canvas.height = this.postctx.canvas.height = this.el.height
 
     let ctx = this.ctx;
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
@@ -80,7 +100,7 @@ export default class Pixel implements IBaseScene{
 
     for (let i = 0; i < this.dataLength; i++) {
 
-      if(!bars[i]){
+      if (!bars[i]) {
         continue;
       }
       let count = bars[i] >> 3
@@ -89,7 +109,7 @@ export default class Pixel implements IBaseScene{
       // shader part
       ctx.fillStyle = `hsl(${(this.frame * 0.5 + i * 2) % 360}, 100%, 50%)`
 
-      for(let j = 0; j < count; j++) {
+      for (let j = 0; j < count; j++) {
         let realY = startY - j * unitWidth
         // 绘制方形点
         // ctx.fillRect(realX, realY, dotWidth, dotWidth);
@@ -110,21 +130,22 @@ export default class Pixel implements IBaseScene{
 
   }
 
-  public drawEachFrame(dataArray: Uint8Array) {
-    if(!this.el || !this.postctx || !this.ctx){
+  drawEachFrame(dataArray: Uint8Array) {
+    if (!this.el || !this.postctx || !this.ctx) {
       return;
     }
-    // this.stats.begin();
+
+    this.frameTimer = requestAnimationFrame(() => {
+      this.stats.begin();
+      this.drawEachFrame(dataArray)
+      this.stats.end();
+    })
 
     if (this.analyser) {
       // 读取数据
       this.analyser.getByteFrequencyData(dataArray);
       this.draw(dataArray)
     }
-
-    // this.stats.end();
-
-    this.frameTimer = requestAnimationFrame(() => this.drawEachFrame(dataArray))
   }
 
 }

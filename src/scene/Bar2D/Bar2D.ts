@@ -1,13 +1,8 @@
-import { IBaseScene, ISceneProps } from "../../models/common"
+import BaseScene from "../Base/BaseScene"
 
 
 
-export default class Bar2D implements IBaseScene{
-  el: HTMLCanvasElement | null = null
-
-  audioCtx: AudioContext | null = null
-
-  analyser: AnalyserNode | null = null
+export default class Bar2D extends BaseScene {
 
   frameTimer = 0
 
@@ -21,13 +16,31 @@ export default class Bar2D implements IBaseScene{
   // Bar 的 border 宽度
   BAR_GAP = 2;
 
-  stats: any
 
-  constructor(params: ISceneProps) {
-    Object.assign(this, params)
+  init() {
+    if(!this.el) return
+    if(this.inited){
+      return;
+    }
+    this.inited = true
+    
+    const resizeHandler = () => {
+      if (!this.el) {
+        return;
+      }
+      var width = window.innerWidth;
+      var height = window.innerHeight;
+      this.el.width = width;
+      this.el.height = height;
+      console.log('do resize')
+    };
+
+    window.addEventListener('resize', resizeHandler);
+
+    this.removeResizeEvent = () => {
+      window.removeEventListener('resize', resizeHandler);
+    }
   }
-
-  init() {}
 
   stopVisualize() {
     if (this.frameTimer) {
@@ -46,14 +59,14 @@ export default class Bar2D implements IBaseScene{
     }
   }
 
-  drawEachFrame ( dataArray: Uint8Array) {
+  drawEachFrame(dataArray: Uint8Array) {
     // 递归调用
     this.frameTimer = requestAnimationFrame(() => {
-      // this.stats.begin();
+      this.stats.begin();
 
       this.drawEachFrame(dataArray)
 
-      // this.stats.end();
+      this.stats.end();
     });
 
     if (this.analyser) {
@@ -69,18 +82,18 @@ export default class Bar2D implements IBaseScene{
     }
   }
 
-  clearFloats () {
+  clearFloats() {
     this.floats = [];
   }
 
-  clearCanvas () {
-    if(!this.el){
+  clearCanvas() {
+    if (!this.el) {
       return
     }
     const canvasWidth = this.el.width;
     const canvasHeight = this.el.height;
     const canvasCtx = this.el.getContext("2d");
-    if(!canvasCtx){
+    if (!canvasCtx) {
       return
     }
     // 绘制图形
@@ -88,8 +101,8 @@ export default class Bar2D implements IBaseScene{
     canvasCtx.fillRect(0, 0, canvasWidth, canvasHeight);
   }
 
-  drawFloats (dataArray: Uint8Array) {
-    if(!this.el){
+  drawFloats(dataArray: Uint8Array) {
+    if (!this.el) {
       return
     }
     const canvasWidth = this.el.width;
@@ -124,8 +137,8 @@ export default class Bar2D implements IBaseScene{
     })
   }
 
-  drawBars ( dataArray: Uint8Array) {
-    if(!this.el){
+  drawBars(dataArray: Uint8Array) {
+    if (!this.el) {
       return
     }
     const canvasWidth = this.el.width;

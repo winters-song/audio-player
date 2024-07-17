@@ -14,7 +14,7 @@ import { shuffle } from 'lodash';
  * bacause the mp3 decoder only works through Blob
  */
 import breath from '../../assets/audio/薬師寺寛邦,キッサコ - 呼吸.mp3';
-import { PLAY_MODE, TOTAL_PLAY_MODE } from "../common/constants";
+import { defaultPlayList, PLAY_MODE, TOTAL_PLAY_MODE } from "../common/constants";
 
 const {Text} = Typography
 
@@ -159,16 +159,20 @@ const Audio: FC = () => {
 
   useEffect(() => {
     // load default music
-    presetLocalMusic(breath).then((item) => {
-      dispatch(updatePlayList([...playList, item]))
-      dispatch(updateCurrentItem(item))
-    })
+    let list = defaultPlayList;
 
-    sceneMgr.current = new SceneMgr('canvas')
+    Promise.all(defaultPlayList.map(presetLocalMusic)).then((items) => {
+      const nextList = [...playList, ...items];
+      dispatch(updatePlayList(nextList));
+      dispatch(updateCurrentItem(nextList[0]));
 
-    setTimeout(() => {
-      pageInited.current = true
-    }, 1000)
+      setTimeout(() => {
+        pageInited.current = true
+      }, 1000)
+    });
+
+    sceneMgr.current = new SceneMgr()
+
   }, [])
 
 
@@ -179,8 +183,12 @@ const Audio: FC = () => {
   }, [playList, playMode])
 
   useEffect(() => {
-    if(effectMode !== undefined){
-      sceneMgr.current?.toggleEffect(effectMode)
+    if(effectMode){
+      sceneMgr.current?.toggleEffect(effectMode, () => {
+        if(sceneMgr.current?.stream){
+          sceneMgr.current?.visualize(sceneMgr.current?.stream)
+        }
+      })
     }
   }, [effectMode])
 

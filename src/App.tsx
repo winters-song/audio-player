@@ -8,15 +8,18 @@ import { Image } from 'antd';
 
 import donateImg from './assets/img/donate.png';
 import EffectPicker from './components/EffectPicker';
+import { CANVAS_TYPE } from './components/common/constants';
 
 
 function App() {
   const [visible, setVisible] = useState(false);
   const playListVisible = useSelector((state: IStore) => state.common.playListVisible)
+  const currentEffectMode = useSelector((state: IStore) => state.common.effectMode)
 
   return (
     <div className="App">
-      <canvas id="canvas"/>
+      <canvas id="canvas-2d" className={`canvas ${currentEffectMode.type === CANVAS_TYPE.CANVAS_2D ? '' : 'hidden'}`}/>
+      <canvas id="canvas-webgl" className={`canvas ${currentEffectMode.type === CANVAS_TYPE.WEBGL ? '' : 'hidden'}`}/>
 
       <EffectPicker />
 

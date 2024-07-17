@@ -9,6 +9,7 @@ const Loadable = (Component: FC) => (props: any) => (
 
 const App = Loadable(lazy(() => import('../App')));
 const ShaderText = Loadable(lazy(() => import('../pages/ShaderText')));
+const Three = Loadable(lazy(() => import('../pages/Three')));
 
 // ==============================|| ROUTING RENDER ||============================== //
 
@@ -24,7 +25,11 @@ export default function Routes() {
       {
         path: '/shadertext',
         element: <ShaderText/>
-      }
+      },
+      {
+        path: '/threejs',
+        element: <Three />
+      },
     ]
   }]);
 }
