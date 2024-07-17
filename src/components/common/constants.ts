@@ -37,5 +37,5 @@ export const effectList: IEffectMode[] = [{
 
 
 export const defaultPlayList = [
-  song1, song2, song3, song4, song5, song6
+  song1, song2, song3, song4, song5, //song6
 ]
