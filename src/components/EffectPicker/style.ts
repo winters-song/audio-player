@@ -7,12 +7,12 @@ export const ListWrapper = styled.div`
   left: 10px;
   right: 0;
   bottom: 0;
+  height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   width: 50px;
-  height: 100px;
   transform: translateY(-50%);
   row-gap: 15px;
   font-family: var(--font-family);

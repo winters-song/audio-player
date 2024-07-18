@@ -3,8 +3,20 @@ import * as THREE from 'three';
 import BaseScene from '../Base/BaseScene';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
+const color1 = 0xeff6ff;
+const color2 = 0xdbeafe;
+const color3 = 0xbfdbfe;
+const color4 = 0x93c5fd;
+const color5 = 0x60a5fa;
+const color6 = 0x3b82f6;
+const color7 = 0x2563eb;
+const color8 = 0x1d4ed8;
+const colorArray = [color1, color2, color3, color4, color5, color6, color7, color8];
 
-export default class Line extends BaseScene {
+/**
+ * Threejs学习Demo
+*/
+export default class Wave extends BaseScene {
 
   renderer: THREE.WebGLRenderer | null = null
 
@@ -16,15 +28,15 @@ export default class Line extends BaseScene {
 
   particleGeometry?: THREE.BufferGeometry
 
-  length = 512
+  length = 1024
 
   inited = false
 
   controls: OrbitControls | null = null
 
   init() {
-    if(!this.el) return
-    if(this.inited){
+    if (!this.el) return
+    if (this.inited) {
       return;
     }
     this.inited = true
@@ -37,11 +49,11 @@ export default class Line extends BaseScene {
       antialias: true,
       canvas: this.el
     });
- 
+
     this.drawParticle();
 
     this.controls = new OrbitControls(this.camera, this.el);
-    this.controls.autoRotate = true;
+    // this.controls.autoRotate = true;
 
 
     const resizeHandler = () => {
@@ -75,21 +87,29 @@ export default class Line extends BaseScene {
     this.particleGeometry = new THREE.BufferGeometry();
     const positions = new Float32Array(this.length * 3);
     const colors = new Float32Array(this.length * 3);
+    const z = 0;
+    const space = 3;
+    const col = this.length / 8;
 
-    for (let i = 0, j = 0, l = positions.length; i < l; i += 3, j++) {
-      positions[i] = (j - this.length/2) * 1.1;
+    for (let i = 0, j = 0; i < positions.length; i += 3, j++) {
+      let row = Math.floor(j/col)
+      positions[i] = (j % col - col/2) * space;
       positions[i + 1] = 0;
-      positions[i + 2] = 0;
+      positions[i + 2] = z + row * 25;
 
-      colors[i] = 1;
-      colors[i + 1] = 1;
-      colors[i + 2] = 1;
+      const colorVal = colorArray[row];
+      colors[i] = ((colorVal >> 16) & 255) / 255;
+      colors[i + 1] = ((colorVal >> 8) & 255) / 255;
+      colors[i + 2] = (colorVal & 255) / 255;
     }
 
     this.particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     this.particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
-    const material = new THREE.PointsMaterial({ vertexColors: true, size: 3 });
+    const material = new THREE.PointsMaterial({ 
+      vertexColors: true, 
+      size: 3,
+     });
     const particles = new THREE.Points(this.particleGeometry, material);
     this.scene?.add(particles);
 
@@ -97,8 +117,8 @@ export default class Line extends BaseScene {
     this.scene?.add(gridHelper);
   }
 
-  drawEachFrame ( dataArray: Uint8Array) {
-    
+  drawEachFrame(dataArray: Uint8Array) {
+
     this.renderer?.setAnimationLoop(() => {
       this.stats.begin();
       this.controls?.update();
@@ -110,23 +130,14 @@ export default class Line extends BaseScene {
       return;
     }
     if (this.analyser) {
+
       this.analyser.getByteFrequencyData(dataArray);
       const positions = this.particleGeometry.attributes.position.array;
-      const colors = this.particleGeometry.attributes.color.array;
-      const half = this.length / 2
-      for (let i = 0; i < half; i++) {
-        // 每个粒子的索引
-        const indexRight = (i + half) * 3;
-        const indexLeft = (half - i) * 3;
-
-        // 更新每个粒子的位置
-        positions[indexLeft + 1] = positions[indexRight + 1] = dataArray[i] / 2; // 更新 y 坐标
-        colors[indexLeft + 1] = colors[indexRight + 1] = dataArray[i]/255;
-        colors[indexLeft + 2] = colors[indexRight + 2] = 1 - dataArray[i]/255;
+      for (let i = 0; i < this.length; i++) {
+        positions[i*3 + 1] = dataArray[i]
       }
 
       this.particleGeometry.attributes.position.needsUpdate = true; // 标记顶点位置属性已更新
-      this.particleGeometry.attributes.color.needsUpdate = true; // 标记顶点位置属性已更新
 
       this.camera.lookAt(this.scene.position);
 

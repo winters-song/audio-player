@@ -2,6 +2,7 @@ import { IEffectMode, ISceneProps } from "../../models/common"
 import Bar2D from "../../scene/Bar2D/Bar2D"
 import Pixel from "../../scene/Pixel/Pixel"
 import Line from "../../scene/Line/Line"
+import Wave from "../../scene/Wave/Wave"
 import { CANVAS_TYPE } from "../common/constants"
 // import TestScene from "../../scene/Test/TestScene"
 
@@ -9,7 +10,8 @@ import { CANVAS_TYPE } from "../common/constants"
 const SceneList = [
   Bar2D,
   Pixel,
-  Line
+  Line,
+  Wave
 ]
 
 const canvas2dSelector = '#canvas-2d'

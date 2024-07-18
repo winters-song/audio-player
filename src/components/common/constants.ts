@@ -33,9 +33,13 @@ export const effectList: IEffectMode[] = [{
   id: 3,
   name: 'Line 3D',
   type: CANVAS_TYPE.WEBGL
+},{
+  id: 4,
+  name: 'Wave 3D',
+  type: CANVAS_TYPE.WEBGL
 }]
 
 
 export const defaultPlayList = [
-  song1, song2, song3, song4, song5, //song6
+  song1, song2, song3, song4, song5, song6
 ]
