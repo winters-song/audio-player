@@ -70,6 +70,7 @@ export default class Wave extends BaseScene {
         this.camera.updateProjectionMatrix();
       }
     };
+    resizeHandler();
 
     window.addEventListener('resize', resizeHandler);
 

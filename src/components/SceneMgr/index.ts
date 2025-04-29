@@ -44,12 +44,14 @@ export default class SceneMgr {
     if (!this.canvas2dEl || !this.canvasWebglEl) {
       throw new Error('找不到 canvas');
     }
-    this.canvasWebglEl.width = this.canvas2dEl.width = window.innerWidth;    
-    this.canvasWebglEl.height = this.canvas2dEl.height = window.innerHeight;
+    this.canvas2dEl.width = window.innerWidth;
+    this.canvas2dEl.height = window.innerHeight;
+    this.canvasWebglEl.width = window.innerWidth ;
+    this.canvasWebglEl.height = window.innerHeight ;
 
     this.stats = new Stats();
-    this.stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
-    document.body.appendChild( this.stats.dom );
+    this.stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+    document.body.appendChild(this.stats.dom);
   }
 
   visualize(stream: MediaStream) {
@@ -58,7 +60,7 @@ export default class SceneMgr {
     this.audioCtx = this.audioCtx || new AudioContext()
     this.analyser = this.analyser || this.audioCtx.createAnalyser();
 
-    if(this.audioCtx && this.analyser){
+    if (this.audioCtx && this.analyser) {
 
       // if(this.source){
       //   this.source.disconnect();
@@ -75,7 +77,7 @@ export default class SceneMgr {
       const dataArray = new Uint8Array(bufferLength);
 
 
-      if(!this.scene && this.currentEffectMode){
+      if (!this.scene && this.currentEffectMode) {
         this.toggleEffect(this.currentEffectMode)
       }
 
@@ -96,10 +98,10 @@ export default class SceneMgr {
   toggleEffect(effectMode: IEffectMode, cb?: () => void) {
     this.currentEffectMode = effectMode
 
-    if(!this.analyser || !this.audioCtx){
-      return 
+    if (!this.analyser || !this.audioCtx) {
+      return
     }
-    if(this.scene){
+    if (this.scene) {
       this.scene.destroy();
     }
 

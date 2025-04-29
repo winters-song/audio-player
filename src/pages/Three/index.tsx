@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
-import TestScene from "./components/TestScene";
+// import Scene from "./components/Voxel";
+import Scene from "./components/Edges";
 
 
 const Page = (props: any) => {
@@ -8,10 +9,10 @@ const Page = (props: any) => {
   useEffect(() => {
     const canvas = elRef.current;
     if (canvas) {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      canvas.width = window.innerWidth * 2;
+      canvas.height = window.innerHeight * 2;
       
-      new TestScene({
+      new Scene({
         el: canvas
       });
     }
