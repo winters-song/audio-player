@@ -13,7 +13,7 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <ReduxProvider store={store}>
-    <BrowserRouter basename='audio-player'>
+    <BrowserRouter basename=''>
       <Routes />
     </BrowserRouter>
   </ReduxProvider>
